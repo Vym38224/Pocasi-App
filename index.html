@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Počasí App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Počasí App</h1>
+        <form id="weather-form">
+            <input type="text" id="city" placeholder="Zadej název města" required>
+            <button type="submit">Zjistit počasí</button>
+        </form>
+        <div id="weather-result">
+            <!-- Data o počasí budou zobrazena zde -->
+        </div>
+    </div>
+    <script id="forecast-data" type="application/json"></script> <!-- Uložíme data o předpovědi -->
+    <script src="script.js"></script>
+</body>
+</html>

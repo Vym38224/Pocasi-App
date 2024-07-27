@@ -1,0 +1,139 @@
+/* Základní stylování těla a kontejneru */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px; /* Zvýšení maximální šířky pro lepší rozložení */
+    margin: 20px;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden; /* Skrýt přetékající obsah */
+}
+
+h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center; /* Zarovnat text na střed */
+}
+
+form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+input, button {
+    padding: 12px;
+    margin: 5px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input {
+    width: calc(100% - 24px); /* Přizpůsobení šířky */
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#weather-result {
+    margin-top: 20px;
+    text-align: left;
+    overflow-x: auto;
+}
+
+#weather-result h2 {
+    font-size: 22px;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+#weather-result p {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+#weather-result ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#weather-result li {
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+    background: #fafafa;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+#weather-result li:last-child {
+    border-bottom: none;
+}
+
+button {
+    display: block;
+    margin-top: 10px;
+}
+
+#hourly-forecast {
+    margin-top: 20px;
+}
+
+#hourly-forecast h3 {
+    font-size: 20px;
+    color: #444;
+}
+
+#hourly-forecast ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#hourly-forecast li {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    background: #fafafa;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+#hourly-forecast li:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 600px) {
+    body {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+}
