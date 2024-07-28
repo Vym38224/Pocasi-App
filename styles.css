@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #156077;
+    background-image: linear-gradient(90deg, #156077 0%, #3f4c6b 100%);
     margin: 0;
     padding: 0;
     display: flex;
@@ -47,7 +48,7 @@ input {
 }
 
 button {
-    background-color: #007bff;
+    background-color: #3f4c6b;
     color: white;
     border: none;
     cursor: pointer;
@@ -55,13 +56,93 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #156077;
 }
 
 #weather-result {
+    position: relative;
     margin-top: 20px;
     text-align: left;
     overflow-x: auto;
+}
+
+.sun {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, yellow 60%, transparent 70%);
+    border-radius: 50%;
+    animation: peek 3s infinite;
+}
+
+.cloud {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px; /* Adjust height to make it elliptical */
+    background: radial-gradient(circle, grey 60%, transparent 70%);
+    animation: peek 3s infinite;
+    opacity: 0.5;
+}
+
+.rain {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    overflow: hidden; /* Ensure drops don't overflow the container */
+}
+
+.drop {
+    position: absolute;
+    bottom: 100%;
+    width: 2px;
+    height: 10px;
+    background: blue;
+    animation: fall 1s infinite linear;
+    opacity: 0.5;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(200px); /* Adjust based on container height */
+    }
+}
+
+/* Generate multiple drops */
+.rain::before,
+.rain::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    width: 4px;
+    height: 12px;
+    background: blue;
+    animation: fall 1s infinite linear;
+    opacity: 0.5;
+}
+
+.rain::before {
+    left: 20%;
+    animation-delay: 0.2s;
+}
+
+.rain::after {
+    left: 40%;
+    animation-delay: 0.4s;
+}
+
+@keyframes peek {
+    0%, 100% {
+        transform: translateY(-20px);
+    }
+    50% {
+        transform: translateY(0);
+    }
 }
 
 #weather-result h2 {
@@ -84,7 +165,7 @@ button:hover {
 #weather-result li {
     border-bottom: 1px solid #eee;
     padding: 15px;
-    background: #fafafa;
+    background: #979da8;
     border-radius: 5px;
     margin-bottom: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);

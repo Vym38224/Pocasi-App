@@ -5,7 +5,7 @@ document.getElementById('weather-form').addEventListener('submit', function(even
 });
 
 async function getWeather(city) {
-    const apiKey = 'f1a2bbccc8027c7fe94b32c2829112d2'; // Nahraď tvým API klíčem
+    const apiKey = 'f1a2bbccc8027c7fe94b32c2829112d2'; // Replace with your API key
     const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}&lang=cz`;
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}&lang=cz`;
 
@@ -16,12 +16,25 @@ async function getWeather(city) {
         ]);
 
         if (!currentWeatherResponse.ok || !forecastResponse.ok) {
-            throw new Error('Město nenalezeno nebo byl překročen limit API');
+            throw new Error('Město nenalezeno nebo překročen limit API');
         }
 
         const currentWeatherData = await currentWeatherResponse.json();
         const forecastData = await forecastResponse.json();
         displayWeather(currentWeatherData, forecastData);
+        // Check if the weather is sunny
+        if (currentWeatherData.weather[0].main.toLowerCase().includes('clear')) {
+            showSun();
+        }
+        // Check if the weather is cloudy
+        if (currentWeatherData.weather[0].main.toLowerCase().includes('clouds')) {
+            showClouds();
+        }
+        // Check if the weather is rainy    
+        if (currentWeatherData.weather[0].main.toLowerCase().includes('rain')) {
+            showRain();
+            showClouds();
+        }
     } catch (error) {
         alert(error.message);
     }
@@ -30,17 +43,17 @@ async function getWeather(city) {
 function displayWeather(currentWeatherData, forecastData) {
     const weatherResult = document.getElementById('weather-result');
 
-    // Převod rychlosti větru z m/s na km/h
+    // Convert wind speed from m/s to km/h
     const windSpeedKmh = (currentWeatherData.wind.speed * 3.6).toFixed(2);
 
-    // Získání srážek
+    // Get precipitation
     const precipitation = currentWeatherData.rain ? currentWeatherData.rain['1h'] : 0;
 
-    // Získání unikátních dat pro každý den
+    // Get unique data for each day
     const dailyForecasts = {};
     forecastData.list.forEach(item => {
         const date = new Date(item.dt * 1000);
-        const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD formát
+        const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD format
 
         if (!dailyForecasts[dateKey] && date.getHours() >= 7 && date.getHours() <= 18) {
             dailyForecasts[dateKey] = item;
@@ -53,13 +66,13 @@ function displayWeather(currentWeatherData, forecastData) {
         <p>Počasí: ${currentWeatherData.weather[0].description}</p>
         <p>Srážky: ${precipitation ? precipitation.toFixed(1) : '0.0'} mm</p>
         <p>Rychlost větru: ${windSpeedKmh} km/h</p>
-        <h2>Předpověď na 5 dní (7:00 - 18:00)</h2>
+        <h2>5denní předpověď (7:00 - 18:00)</h2>
         <ul>
             ${Object.values(dailyForecasts).slice(0, 5).map(item => {
-                // Převod rychlosti větru z m/s na km/h
+                // Convert wind speed from m/s to km/h
                 const forecastWindSpeedKmh = (item.wind.speed * 3.6).toFixed(2);
 
-                // Získání srážek
+                // Get precipitation
                 const forecastPrecipitation = item.rain ? item.rain['3h'] : 0;
 
                 return `
@@ -70,7 +83,7 @@ function displayWeather(currentWeatherData, forecastData) {
                     <p>Počasí: ${item.weather[0].description}</p>
                     <p>Srážky: ${forecastPrecipitation ? forecastPrecipitation.toFixed(1) : '0.0'} mm</p>
                     <p>Rychlost větru: ${forecastWindSpeedKmh} km/h</p>
-                    <button onclick="toggleHourlyForecast(${item.dt})">Zobrazit hodinovou předpověď</button>
+                    <button onclick="toggleHourlyForecast(${item.dt}, this)">Zobrazit hodinovou předpověď</button>
                     <div id="hourly-${item.dt}" style="display: none;"></div>
                 </li>`;
             }).join('')}
@@ -78,22 +91,22 @@ function displayWeather(currentWeatherData, forecastData) {
         <script id="forecast-data" type="application/json">${JSON.stringify(forecastData)}</script>
     `;
 }
-
-function toggleHourlyForecast(dateTime) {
+function toggleHourlyForecast(dateTime, button) {
     const hourlyDiv = document.getElementById(`hourly-${dateTime}`);
     if (hourlyDiv.style.display === 'none') {
         hourlyDiv.style.display = 'block';
+        button.textContent = 'Schovat hodinovou předpověď';
         showHourlyForecast(dateTime);
     } else {
         hourlyDiv.style.display = 'none';
+        button.textContent = 'Zobrazit hodinovou předpověď';
     }
 }
-
 function showHourlyForecast(dateTime) {
     const hourlyDiv = document.getElementById(`hourly-${dateTime}`);
     const forecastData = JSON.parse(document.getElementById('forecast-data').textContent);
 
-    // Filtrujte pouze hodinové předpovědi mezi 7:00 a 18:00
+    // Filter only hourly forecasts between 7:00 and 18:00
     const hourlyData = forecastData.list.filter(item => {
         const date = new Date(item.dt * 1000);
         return date.getDate() === new Date(dateTime * 1000).getDate() &&
@@ -114,4 +127,19 @@ function showHourlyForecast(dateTime) {
             `).join('')}
         </ul>
     `;
+}
+function showSun() {
+    const sun = document.createElement('div');
+    sun.classList.add('sun');
+    document.getElementById('weather-result').appendChild(sun);
+}
+function showClouds() {
+    const clouds = document.createElement('div');
+    clouds.classList.add('cloud');
+    document.getElementById('weather-result').appendChild(clouds);
+}
+function showRain() {
+    const rain = document.createElement('div');
+    rain.classList.add('rain');
+    document.getElementById('weather-result').appendChild(rain);
 }
