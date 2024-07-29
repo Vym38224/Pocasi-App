@@ -8,6 +8,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .container {
@@ -18,7 +19,6 @@ body {
     background: #fff;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    overflow: hidden; 
 }
 
 h1 {
@@ -63,36 +63,137 @@ button:hover {
     position: relative;
     margin-top: 20px;
     text-align: left;
-    overflow-x: auto;
+    overflow: hidden;
 }
 
 .sun {
     position: absolute;
     top: -50px;
-    right: -50px;
-    width: 200px;
-    height: 200px;
+    right: 10px; /* Adjusted to prevent overflow */
+    width: 150px;
+    height: 150px;
     background: radial-gradient(circle, yellow 60%, transparent 70%);
     border-radius: 50%;
     animation: peek 3s infinite;
 }
 
 .cloud {
-    position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 200px;
-    height: 200px; /* Adjust height to make it elliptical */
-    background: radial-gradient(circle, grey 60%, transparent 70%);
-    animation: peek 3s infinite;
-    opacity: 0.5;
+	padding: 0;
+    margin: 0;
+    height: 100px;
+    position: top;
+}
+.clouds {
+	width: 200px; height: 60px;
+	background: #fff;
+	
+	border-radius: 200px;
+	-moz-border-radius: 200px;
+	-webkit-border-radius: 200px;
+	
+	position: relative; 
+}
+.clouds:before, .clouds:after {
+	content: '';
+	position: absolute; 
+	background: #fff;
+	width: 100px; height: 80px;
+	position: absolute; top: -5px; left: 10px;
+	
+	border-radius: 100px;
+	-moz-border-radius: 100px;
+	-webkit-border-radius: 100px;
+	
+	-webkit-transform: rotate(30deg);
+	transform: rotate(30deg);
+	-moz-transform: rotate(30deg);
+}
+
+.clouds:after {
+	width: 120px; height: 120px;
+	top: -55px; left: auto; right: 15px;
+}
+
+/*Time to animate*/
+.x1 {
+	-webkit-animation: moveclouds 15s linear infinite;
+	-moz-animation: moveclouds 15s linear infinite;
+	-o-animation: moveclouds 15s linear infinite;
+}
+
+/*variable speed, opacity, and position of clouds for realistic effect*/
+.x2 {
+	left: 200px; top: -275px;;
+	
+	-webkit-transform: scale(0.6);
+	-moz-transform: scale(0.6);
+	transform: scale(0.6);
+	opacity: 0.6; /*opacity proportional to the size*/
+	
+	/*Speed will also be proportional to the size and opacity*/
+	/*More the speed. Less the time in 's' = seconds*/
+	-webkit-animation: moveclouds 25s linear infinite;
+	-moz-animation: moveclouds 25s linear infinite;
+	-o-animation: moveclouds 25s linear infinite;
+}
+
+.x3 {
+	left: -250px; top: -250px;
+	
+	-webkit-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+	transform: scale(0.8);
+	opacity: 0.8; /*opacity proportional to the size*/
+	
+	-webkit-animation: moveclouds 20s linear infinite;
+	-moz-animation: moveclouds 20s linear infinite;
+	-o-animation: moveclouds 20s linear infinite;
+}
+
+.x4 {
+	left: 470px; top: -360px;
+	
+	-webkit-transform: scale(0.75);
+	-moz-transform: scale(0.75);
+	transform: scale(0.75);
+	opacity: 0.75; /*opacity proportional to the size*/
+	
+	-webkit-animation: moveclouds 18s linear infinite;
+	-moz-animation: moveclouds 18s linear infinite;
+	-o-animation: moveclouds 18s linear infinite;
+}
+
+.x5 {
+	left: -150px; top: -300px;
+	
+	-webkit-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+	transform: scale(0.8);
+	opacity: 0.8; /*opacity proportional to the size*/
+	
+	-webkit-animation: moveclouds 20s linear infinite;
+	-moz-animation: moveclouds 20s linear infinite;
+	-o-animation: moveclouds 20s linear infinite;
+}
+
+@-webkit-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
+}
+@-moz-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
+}
+@-o-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
 }
 
 .rain {
     position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 200px;
+    top: 0px;
+    right: 10px; /* Adjusted to prevent overflow */
+    width: 300px;
     height: 200px;
     overflow: hidden; /* Ensure drops don't overflow the container */
 }
@@ -115,7 +216,8 @@ button:hover {
 
 /* Generate multiple drops */
 .rain::before,
-.rain::after {
+.rain::after,
+.rain::nth-child(3) {
     content: '';
     position: absolute;
     bottom: 100%;
@@ -127,14 +229,19 @@ button:hover {
 }
 
 .rain::before {
-    left: 20%;
-    animation-delay: 0.2s;
+    left: 10%;
+    animation-delay: 0.1s;
 }
 
 .rain::after {
-    left: 40%;
+    left: 20%;
     animation-delay: 0.4s;
 }
+.rain:nth-child(3) {
+    left: 30%;
+    animation-delay: 0.3s;
+}
+
 
 @keyframes peek {
     0%, 100% {
@@ -144,7 +251,16 @@ button:hover {
         transform: translateY(0);
     }
 }
-
+.weather-background {
+    background: #c9dbe9;
+	background: -webkit-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+	background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
+	background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    height: 200px;
+}
 #weather-result h2 {
     font-size: 22px;
     color: #444;
@@ -165,7 +281,7 @@ button:hover {
 #weather-result li {
     border-bottom: 1px solid #eee;
     padding: 15px;
-    background: #979da8;
+    background: #cbd4e6;
     border-radius: 5px;
     margin-bottom: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);

@@ -27,8 +27,10 @@ async function getWeather(city) {
             showSun();
         }
         // Check if the weather is cloudy
-        if (currentWeatherData.weather[0].main.toLowerCase().includes('clouds')) {
+        if (currentWeatherData.weather[0].main.toLowerCase().includes('cloud')) {
+            showSun();
             showClouds();
+            
         }
         // Check if the weather is rainy    
         if (currentWeatherData.weather[0].main.toLowerCase().includes('rain')) {
@@ -61,11 +63,13 @@ function displayWeather(currentWeatherData, forecastData) {
     });
 
     weatherResult.innerHTML = `
-        <h2>Aktuální počasí</h2>
-        <p>Teplota: ${currentWeatherData.main.temp}°C</p>
-        <p>Počasí: ${currentWeatherData.weather[0].description}</p>
-        <p>Srážky: ${precipitation ? precipitation.toFixed(1) : '0.0'} mm</p>
-        <p>Rychlost větru: ${windSpeedKmh} km/h</p>
+        <div id="current-weather-visuals" class="weather-background">
+            <h2>Aktuální počasí</h2>
+            <p>Teplota: ${currentWeatherData.main.temp}°C</p>
+            <p>Počasí: ${currentWeatherData.weather[0].description}</p>
+            <p>Srážky: ${precipitation ? precipitation.toFixed(1) : '0.0'} mm</p>
+            <p>Rychlost větru: ${windSpeedKmh} km/h</p>
+        </div>
         <h2>5denní předpověď (7:00 - 18:00)</h2>
         <ul>
             ${Object.values(dailyForecasts).slice(0, 5).map(item => {
@@ -131,15 +135,34 @@ function showHourlyForecast(dateTime) {
 function showSun() {
     const sun = document.createElement('div');
     sun.classList.add('sun');
-    document.getElementById('weather-result').appendChild(sun);
+    document.getElementById('current-weather-visuals').appendChild(sun);
 }
+
 function showClouds() {
     const clouds = document.createElement('div');
     clouds.classList.add('cloud');
-    document.getElementById('weather-result').appendChild(clouds);
+    clouds.innerHTML = `
+        <div class="clouds x1"></div>
+        <div class="clouds x2"></div>
+        <div class="clouds x3"></div>
+        <div class="clouds x4"></div>
+        <div class="clouds x5"></div>
+    `;
+    document.getElementById('current-weather-visuals').appendChild(clouds);
 }
+
 function showRain() {
     const rain = document.createElement('div');
     rain.classList.add('rain');
-    document.getElementById('weather-result').appendChild(rain);
+    document.getElementById('current-weather-visuals').appendChild(rain);
+
+    const numberOfDrops = 10; // Adjust the number of drops as needed
+
+    for (let i = 0; i < numberOfDrops; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'drop';
+        drop.style.left = `${Math.random() * 100}%`;
+        drop.style.animationDelay = `${Math.random()}s`;
+        rain.appendChild(drop);
+    }
 }
