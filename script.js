@@ -70,7 +70,7 @@ function displayWeather(currentWeatherData, forecastData) {
             <p>Srážky: ${precipitation ? precipitation.toFixed(1) : '0.0'} mm</p>
             <p>Rychlost větru: ${windSpeedKmh} km/h</p>
         </div>
-        <h2>5denní předpověď (7:00 - 18:00)</h2>
+        <h2>5 denní předpověď (7:00 - 18:00)</h2>
         <ul>
             ${Object.values(dailyForecasts).slice(0, 5).map(item => {
                 // Convert wind speed from m/s to km/h
@@ -81,7 +81,7 @@ function displayWeather(currentWeatherData, forecastData) {
 
                 return `
                 <li>
-                    <p>Datum: ${new Date(item.dt * 1000).toLocaleDateString()}</p>
+                    <p>Datum: ${new Date(item.dt * 1000).toLocaleDateString('cs-CZ', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' })}</p>
                     <p>Čas: ${new Date(item.dt * 1000).toLocaleTimeString()}</p>
                     <p>Teplota: ${item.main.temp}°C</p>
                     <p>Počasí: ${item.weather[0].description}</p>
@@ -118,18 +118,20 @@ function showHourlyForecast(dateTime) {
     });
 
     hourlyDiv.innerHTML = `
-        <h3>Hodinová předpověď</h3>
-        <ul>
-            ${hourlyData.map(item => `
-                <li>
-                    <p>Čas: ${new Date(item.dt * 1000).toLocaleTimeString()}</p>
-                    <p>Teplota: ${item.main.temp}°C</p>
-                    <p>Počasí: ${item.weather[0].description}</p>
-                    <p>Srážky: ${item.rain ? item.rain['3h'].toFixed(1) : '0.0'} mm</p>
-                    <p>Rychlost větru: ${(item.wind.speed * 3.6).toFixed(2)} km/h</p>
-                </li>
-            `).join('')}
-        </ul>
+        <div>
+            <h3>Hodinová předpověď</h3>
+            <ul>
+                ${hourlyData.map(item => `
+                    <li>
+                        <p>Čas: ${new Date(item.dt * 1000).toLocaleTimeString()}</p>
+                        <p>Teplota: ${item.main.temp}°C</p>
+                        <p>Počasí: ${item.weather[0].description}</p>
+                        <p>Srážky: ${item.rain ? item.rain['3h'].toFixed(1) : '0.0'} mm</p>
+                        <p>Rychlost větru: ${(item.wind.speed * 3.6).toFixed(2)} km/h</p>
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
     `;
 }
 function showSun() {
