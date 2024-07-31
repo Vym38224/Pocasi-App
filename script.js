@@ -64,61 +64,64 @@ function displayWeather(currentWeatherData, forecastData) {
 
     weatherResult.innerHTML = `
         <div id="current-weather-visuals" class="weather-background">
-            <h2>Aktuální počasí</h2>
+            <h2>Aktuální počasí pro ${currentWeatherData.name}</h2>
             <p>Teplota: ${currentWeatherData.main.temp}°C</p>
             <p>Počasí: ${currentWeatherData.weather[0].description}</p>
             <p>Srážky: ${precipitation ? precipitation.toFixed(1) : '0.0'} mm</p>
             <p>Rychlost větru: ${windSpeedKmh} km/h</p>
+        
         </div>
-        <h2>5 denní předpověď (7:00 - 18:00)</h2>
-        <ul>
-            ${Object.values(dailyForecasts).slice(0, 5).map(item => {
-                // Convert wind speed from m/s to km/h
-                const forecastWindSpeedKmh = (item.wind.speed * 3.6).toFixed(2);
+        <div>
+            <h2>5 denní předpověď</h2>
+            <ul>
+                ${Object.values(dailyForecasts).slice(0, 5).map(item => {
+                    // Convert wind speed from m/s to km/h
+                    const forecastWindSpeedKmh = (item.wind.speed * 3.6).toFixed(2);
 
-                // Get precipitation
-                const forecastPrecipitation = item.rain ? item.rain['3h'] : 0;
+                    // Get precipitation
+                    const forecastPrecipitation = item.rain ? item.rain['3h'] : 0;
 
-                return `
-                <li>
-                    <p>Datum: ${new Date(item.dt * 1000).toLocaleDateString('cs-CZ', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' })}</p>
-                    <p>Čas: ${new Date(item.dt * 1000).toLocaleTimeString()}</p>
-                    <p>Teplota: ${item.main.temp}°C</p>
-                    <p>Počasí: ${item.weather[0].description}</p>
-                    <p>Srážky: ${forecastPrecipitation ? forecastPrecipitation.toFixed(1) : '0.0'} mm</p>
-                    <p>Rychlost větru: ${forecastWindSpeedKmh} km/h</p>
-                    <button onclick="toggleHourlyForecast(${item.dt}, this)">Zobrazit hodinovou předpověď</button>
-                    <div id="hourly-${item.dt}" style="display: none;"></div>
-                </li>`;
-            }).join('')}
-        </ul>
+                    return `
+                    <li>
+                        <p>Datum: ${new Date(item.dt * 1000).toLocaleDateString('cs-CZ', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' })}</p>
+                        <p>Čas: ${new Date(item.dt * 1000).toLocaleTimeString()}</p>
+                        <p>Teplota: ${item.main.temp}°C</p>
+                        <p>Počasí: ${item.weather[0].description}</p>
+                        <p>Srážky: ${forecastPrecipitation ? forecastPrecipitation.toFixed(1) : '0.0'} mm</p>
+                        <p>Rychlost větru: ${forecastWindSpeedKmh} km/h</p>
+                        <button onclick="toggleHourlyForecast(${item.dt}, this)">Zobrazit hodinovou předpověď</button>
+                        <div id="hourly-${item.dt}" style="display: none;"></div>
+                    </li>`;
+                }).join('')}
+            </ul>
+        </div>
         <script id="forecast-data" type="application/json">${JSON.stringify(forecastData)}</script>
     `;
 }
+
 function toggleHourlyForecast(dateTime, button) {
     const hourlyDiv = document.getElementById(`hourly-${dateTime}`);
     if (hourlyDiv.style.display === 'none') {
         hourlyDiv.style.display = 'block';
-        button.textContent = 'Schovat hodinovou předpověď';
         showHourlyForecast(dateTime);
+        button.textContent = 'Schovat hodinovou předpověď';
     } else {
         hourlyDiv.style.display = 'none';
         button.textContent = 'Zobrazit hodinovou předpověď';
     }
 }
+
 function showHourlyForecast(dateTime) {
     const hourlyDiv = document.getElementById(`hourly-${dateTime}`);
     const forecastData = JSON.parse(document.getElementById('forecast-data').textContent);
 
-    // Filter only hourly forecasts between 7:00 and 18:00
     const hourlyData = forecastData.list.filter(item => {
         const date = new Date(item.dt * 1000);
-        return date.getDate() === new Date(dateTime * 1000).getDate() &&
-               date.getHours() >= 7 && date.getHours() <= 18;
+        return date.getDate() === new Date(dateTime * 1000).getDate();
     });
 
     hourlyDiv.innerHTML = `
-        <div>
+        <div id="hourly-forecast">
             <h3>Hodinová předpověď</h3>
             <ul>
                 ${hourlyData.map(item => `
@@ -131,9 +134,11 @@ function showHourlyForecast(dateTime) {
                     </li>
                 `).join('')}
             </ul>
+            <button onclick="toggleHourlyForecast(${dateTime}, this)">Schovat hodinovou předpověď</button>
         </div>
     `;
 }
+
 function showSun() {
     const sun = document.createElement('div');
     sun.classList.add('sun');
